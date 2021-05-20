@@ -3,16 +3,56 @@ import cv2
 import matplotlib as plt
 import time
 import threading
+from datetime import datetime
+import mysql.connector
+from datetime import datetime
+import os
 
 
+# database
+db= mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="root",
+    database="facemaskdb"
 
-def save_frame(result,frame):
-    cv2.imwrite('./database/detection' + "_time_" + str(result.tm_hour) + "_" + str(result.tm_min) + "_" + str(
-        result.tm_sec) + '.jpg', frame)
+)
 
+mycursor = db.cursor()
+
+# system parameters
 CONFIDENCE_FILTER=0.5
 THRESHOLD=0.3
-SAVING_TIME=0.3
+SAVING_TIME=4
+dir='E:/GitHub/Project-EYE/database/'
+
+
+
+# saving pictures to directory and logs to mysql datatable
+def save_frame(frame,dir):
+    date = str(datetime.now()).replace(":","_")[:-7]
+    cv2.imwrite( dir + "detection" + "_time_" + date + '.jpg', frame)
+    dir = str(dir + "detection" + "_time_" + date + '.jpg')
+    mycursor.execute("INSERT INTO pictures(date, directory) VALUES (%s,%s)", (datetime.now(),dir))
+    db.commit()
+
+# clearing directory and datatable, created for testing purposes
+def clearDB(dir):
+    mycursor.execute("DELETE FROM pictures")
+    mycursor.execute("ALTER TABLE pictures AUTO_INCREMENT = 1")
+    db.commit()
+    for picture in os.listdir(dir):
+        print(picture+ "  deleted")
+        os.remove(dir+picture)
+
+# printing database logs, created for testing purposes
+def printDB():
+    mycursor.execute("SELECT * FROM pictures")
+    for x in mycursor:
+        print(x)
+
+
+
 
 (W, H) = (None, None)
 
@@ -61,7 +101,7 @@ while (True):
     layerOutputs = yolo.forward(outputlayers)
     end = time.time()
 
-    # print("time:"+str(end-start))
+
 
 
     # initialize our lists of detected bounding boxes, confidences and class IDs for every grabbed frame
@@ -122,10 +162,9 @@ while (True):
 
                 print("saving")
                 savingTime = time.time()
-                result = time.gmtime()
 
                 try:
-                    saveThread = threading.Thread(target=save_frame, args=(result,frame))
+                    saveThread = threading.Thread(target=save_frame, args=(frame,dir))
                     saveThread.start()
                 except:
                     print("error while saving")
@@ -136,8 +175,21 @@ while (True):
 
     timetest.append(time.time()-testTimer)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+
+    pressedKey = cv2.waitKey(1) & 0xFF
+
+    if pressedKey & 0xFF == ord('q'):
         break
+
+    if pressedKey & 0xFF == ord('s'):
+        print("showing table")
+        printDBThread = threading.Thread(target=printDB)
+        printDBThread.start()
+
+    if pressedKey & 0xFF == ord('c'):
+        print("clearing table")
+        clearDBThread = threading.Thread(target=clearDB, args=(dir,))
+        clearDBThread.start()
 
 print(sum(timetest)/len(timetest))
 cap.release()
