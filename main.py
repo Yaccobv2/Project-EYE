@@ -24,6 +24,7 @@ mycursor = db.cursor()
 CONFIDENCE_FILTER=0.5
 THRESHOLD=0.3
 SAVING_TIME=4
+inputFrameSize= (412,412)
 dir='E:/GitHub/Project-EYE/database/'
 
 
@@ -93,7 +94,7 @@ while (True):
         (H, W) = frame.shape[:2]
 
     # create input matrix from frame, apply transformations and pass it to the first layer of ANN
-    blob = cv2.dnn.blobFromImage(frame, 1 / 255, (412, 412), swapRB=True, crop=False)
+    blob = cv2.dnn.blobFromImage(frame, 1 / 255, inputFrameSize, swapRB=True, crop=False)
     yolo.setInput(blob)
 
     # make forward pass and calculate its time
