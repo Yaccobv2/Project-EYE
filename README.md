@@ -5,7 +5,7 @@ Face mask detection system using deep learning and RaspberryPi.
 The project is intended to detect people who are not wearing facemask protection.
 
 # How does it work?
-When system detects person without mask takes and saves a picture in database directory, it also creates record in MySQL database in format: id, date, directory link. There are also developer features like clearing whole database and directory after clicking the key "c", printing in console every database record after clicking the key "s", quiting program after clicking the key "q". Those features and saving logic take place in separated threads every time they are called.
+When system detects a person without mask takes and saves a picture in database directory, it also creates record in MySQL database in format: id, date, directory link. There are also developer features like clearing whole database and directory after clicking the key "c", printing in console every database record after clicking the key "s", quiting program after clicking the key "q". Those features and saving logic take place in separated threads every time they are called.
 
 MySQL record example:
 (1, datetime.datetime(2021, 5, 21, 12, 54, 48), 'E:/GitHub/Project-EYE/database/detection_time_2021-05-21 12_54_47.jpg')
