@@ -29,7 +29,7 @@ Person detected without mask:
 </p>
 
 <p float="left">
-<img src="https://user-images.githubusercontent.com/39679208/119143465-eb6a7900-ba47-11eb-9ac9-5ecf4a4c8da1.jpg"  width="49%" height="50%"/> <img src="https://user-images.githubusercontent.com/39679208/119143501-f6250e00-ba47-11eb-9790-3fde37636475.jpg"  width="49%" height="50%"/>
+<img src="https://user-images.githubusercontent.com/39679208/119143465-eb6a7900-ba47-11eb-9ac9-5ecf4a4c8da1.jpg"  width="49%" height="50%"/> <img src="https://user-images.githubusercontent.com/39679208/119238225-872be000-bb41-11eb-8767-142ce1245252.jpg"  width="49%" height="50%"/>
 </p>
 
 Person detected with mask:
@@ -43,5 +43,6 @@ Person detected with mask:
 </p>
 
 # Video presentation
-[IN progress]
+Even with poor camera qualty and lighting results are satisfying.
+https://youtu.be/kEa3-nvqm-4
 
