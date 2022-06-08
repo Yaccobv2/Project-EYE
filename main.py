@@ -10,15 +10,15 @@ import os
 
 
 # database
-db= mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="root",
-    database="facemaskdb"
+# db= mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     passwd="root",
+#     database="facemaskdb"
+#
+# )
 
-)
-
-mycursor = db.cursor()
+# mycursor = db.cursor()
 
 # system parameters
 CONFIDENCE_FILTER=0.5
@@ -60,7 +60,7 @@ def printDB():
 timetest=[]
 
 # create instance of VideoCapture class
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("test.mp4")
 
 # read neural network structure, weights and biases
 yolo = cv2.dnn.readNetFromDarknet("./yolo-ANN/yolov4-tiny_custom_maski.cfg",
@@ -70,6 +70,7 @@ outputlayers = yolo.getUnconnectedOutLayersNames()
 # read labels
 with open("./yolo-ANN/obj_maski.names", 'r') as f:
     LABELS = f.read().splitlines()
+    
 
 # create rgb colors for every label
 np.random.seed(42)
@@ -109,7 +110,7 @@ while (True):
     boxes = []
     confidences = []
     classIDs = []
-
+    test =[]
     # use output of ANN
     for output in layerOutputs:
         for detection in output:
@@ -148,7 +149,8 @@ while (True):
                 # get the bounding box coordinates
                 (x, y) = (boxes[i][0], boxes[i][1])
                 (w, h) = (boxes[i][2], boxes[i][3])
-
+                test.append(boxes[i][0])
+                test.append(boxes[i][1])
                 # draw a bounding box rectangle, label and confidence on the frame
                 color = [int(c) for c in COLORS[classIDs[i]]]
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
@@ -158,17 +160,17 @@ while (True):
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 
-            # saving frame
-            if (time.time() - savingTime >= SAVING_TIME and classIDs.count(1)):
-
-                print("saving")
-                savingTime = time.time()
-
-                try:
-                    saveThread = threading.Thread(target=save_frame, args=(frame,dir))
-                    saveThread.start()
-                except:
-                    print("error while saving")
+            # # saving frame
+            # if (time.time() - savingTime >= SAVING_TIME and classIDs.count(1)):
+            #
+            #     print("saving")
+            #     savingTime = time.time()
+            #
+            #     try:
+            #         saveThread = threading.Thread(target=save_frame, args=(frame,dir))
+            #         saveThread.start()
+            #     except:
+            #         print("error while saving")
 
 
 
